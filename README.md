@@ -69,6 +69,17 @@ site/
 └── wrangler.jsonc                    # Cloudflare Workers Static Assets config
 ```
 
+## Dependency overrides
+
+`package.json` has an `overrides` block that forces vulnerability-free transitive versions. As of 2026-05-06:
+
+- `tmp` → `^0.2.4` (was `^0.1.0` from `@lhci/cli`; CVE GHSA-52f5-9888-hmc6, symlink TOCTOU)
+- `lodash` → `^4.18.1` (was `4.17.23` from `pa11y-ci`; CVEs GHSA-r5fr-rjxr-66jc + GHSA-f23m-r3pf-42rh, code injection + prototype pollution; advisory range `<=4.17.23`)
+- `inquirer` → `^9.3.7` (was `6.5.2` from `@lhci/cli`; pulled in vulnerable `external-editor` and `tmp`)
+- `external-editor` → `^3.1.0` (defensive; inquirer 9 doesn't transitively need it)
+
+These overrides exist because `pa11y-ci` and `@lhci/cli` haven't modernized their dep trees and the upstream maintainers' suggested fixes (`npm audit fix --force`) would downgrade us to ancient, broken versions. Verified: `npm audit --audit-level=high` returns 0 vulnerabilities, build still passes. **Revisit when those packages update upstream**, and re-test the override rationale before any major version bump of either tool.
+
 ## Don't type these into the codebase
 
 From the SSG locked decisions:
