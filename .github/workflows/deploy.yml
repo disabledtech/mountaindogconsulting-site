@@ -1,0 +1,116 @@
+# Build → audit → deploy.
+# Locked decisions: see PROJECT — Mountain Dog Website.md → "Locked Decisions — Hosting".
+# - npm ci --ignore-scripts (postinstall is the most common npm supply-chain payload vector)
+# - axe-core + pa11y-ci + Lighthouse CI run BEFORE deploy; deploy only on green
+# - Deploy via cloudflare/wrangler-action with a narrowly-scoped API token (Workers Scripts:Edit only)
+
+name: Build, audit, and deploy
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build-and-audit:
+    name: Build and audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    outputs:
+      should-deploy: ${{ steps.gate.outputs.deploy }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install (no scripts)
+        run: npm ci --ignore-scripts
+
+      - name: Audit dependencies (high/critical only)
+        run: npm audit --audit-level=high
+
+      - name: Build
+        run: npm run build
+
+      - name: axe-core (a11y)
+        run: npx --yes @axe-core/cli ./dist --dir --exit
+        continue-on-error: false
+
+      - name: Pa11y CI (a11y, sitemap-driven)
+        run: npx --yes pa11y-ci --sitemap ./dist/sitemap-index.xml
+
+      - name: Lighthouse CI — desktop
+        run: npx --yes @lhci/cli@latest autorun --config=./lighthouserc.json
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+
+      - name: Lighthouse CI — mobile
+        run: npx --yes @lhci/cli@latest autorun --config=./lighthouserc.mobile.json
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+
+      - name: Upload built site
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist
+          retention-days: 7
+
+      - name: Set deploy gate
+        id: gate
+        run: |
+          if [ "${{ github.event_name }}" = "push" ] && [ "${{ github.ref }}" = "refs/heads/main" ]; then
+            echo "deploy=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "deploy=false" >> "$GITHUB_OUTPUT"
+          fi
+
+  deploy:
+    name: Deploy to Cloudflare Workers Static Assets
+    needs: build-and-audit
+    if: needs.build-and-audit.outputs.should-deploy == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment:
+      name: production
+      url: https://mountaindogconsulting.com
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install (no scripts)
+        run: npm ci --ignore-scripts
+
+      - name: Download built site
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist
+
+      - name: Deploy with Wrangler
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: deploy

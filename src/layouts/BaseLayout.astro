@@ -1,0 +1,109 @@
+---
+/**
+ * BaseLayout — every page wraps in this.
+ *
+ * Head order matches Phase 1d "Resource priority order":
+ *   1. charset (always first)
+ *   2. viewport
+ *   3. title
+ *   4. font preloads (Astro Fonts API <Font /> with preload=true)
+ *   5. inline critical CSS (Astro auto-injects via inlineStylesheets:'always')
+ *   6. Open Graph / Twitter Card
+ *   7. canonical
+ *   8. icons
+ *   9. RSS feed reference
+ *  10. theme-colour
+ *  11. sitemap reference
+ *
+ * Locked: <html lang="en-CA"> on every page (build punch-list item #1).
+ */
+
+import { Font } from 'astro:assets';
+import '../styles/global.css';
+
+export interface Props {
+  /** <title>. Required. */
+  title: string;
+  /** Meta description. Keep under ~155 chars. */
+  description: string;
+  /** Path-relative canonical (e.g. "/about/"). Combined with site origin. */
+  canonical?: string;
+  /** Open Graph image path, served from public/. Defaults to /og-image.png */
+  ogImage?: string;
+  /** Page type for Open Graph. Defaults to "website"; use "article" for blog posts. */
+  ogType?: 'website' | 'article';
+}
+
+const {
+  title,
+  description,
+  canonical,
+  ogImage = '/og-image.png',
+  ogType = 'website',
+} = Astro.props;
+
+const siteOrigin = 'https://mountaindogconsulting.com';
+const canonicalUrl = canonical
+  ? new URL(canonical, siteOrigin).toString()
+  : new URL(Astro.url.pathname, siteOrigin).toString();
+const ogImageUrl = new URL(ogImage, siteOrigin).toString();
+---
+<!doctype html>
+<html lang="en-CA">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+
+    {/* Font preloads — Astro Fonts API emits <link rel="preload" as="font" /> for both weights */}
+    <Font cssVariable="--font-body" preload />
+
+    {/* Open Graph */}
+    <meta property="og:type" content={ogType} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:site_name" content="Mountain Dog Consulting" />
+    <meta property="og:locale" content="en_CA" />
+
+    {/* Twitter Card */}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
+
+    <link rel="canonical" href={canonicalUrl} />
+
+    {/* Icons */}
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+    {/* RSS feed — wired up in Phase 4 */}
+    <link rel="alternate" type="application/rss+xml" title="Mountain Dog Consulting" href="/rss.xml" />
+
+    {/* Sitemap */}
+    <link rel="sitemap" type="application/xml" href="/sitemap-index.xml" />
+
+    {/* Theme colour */}
+    <meta name="theme-color" content="#072B62" />
+
+    {/* Per-page slot for any extra <head> content (page-specific structured data, etc.) */}
+    <slot name="head" />
+  </head>
+  <body>
+    {/* Skip-to-content — Phase 1c build punch-list #4 */}
+    <a href="#main" class="skip-to-content">Skip to content</a>
+
+    <slot name="header" />
+
+    <main id="main" tabindex="-1">
+      <slot />
+    </main>
+
+    <slot name="footer" />
+  </body>
+</html>

@@ -1,0 +1,15 @@
+{
+  // Cloudflare Workers Static Assets — see PROJECT tracker → "Locked Decisions — Hosting".
+  // No `main` field on purpose: pure static, no Worker script, so the 100K/day request quota is irrelevant.
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "mountaindog-site",
+  "compatibility_date": "2026-05-05",
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "404-page",
+    "html_handling": "auto-trailing-slash"
+  },
+  "observability": {
+    "enabled": true
+  }
+}

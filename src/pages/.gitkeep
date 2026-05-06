@@ -1,0 +1,3 @@
+# File-based routing root.
+# Phase 3 (Content Build) puts pages here: index.astro, accessibility.astro, 404.astro, etc.
+# Phase 4 (Blog Scaffold) adds blog/[...slug].astro and blog/index.astro.
