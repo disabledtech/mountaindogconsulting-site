@@ -36,8 +36,13 @@
   --color-accent-decorative: var(--color-orange); /* Fills only, never as text on light */
   --color-accent-secondary:  var(--color-sage);   /* Fills only, never as text on light */
 
-  /* Typography (Phase 1c lock) */
-  --font-body: var(--font-body, 'Atkinson Hyperlegible'), system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  /* Typography (Phase 1c lock).
+     --font-body is set by Astro's Fonts API in an earlier <style> block in <head>
+     (it injects :root { --font-body: "Atkinson Hyperlegible-<hash>", system-ui, ... }).
+     Do NOT redefine it here — that creates a self-referential `var(--font-body)`
+     cycle, which CSS treats as invalid, dropping us to the browser default (serif).
+     The fallback list lives in the var() second arg at the consumption site below. */
+  --font-body-fallback: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   --fs-base: 1.125rem;       /* ≈ 18 px */
   --lh-base: 1.5;
   --measure: 65ch;           /* Max line length on prose containers */
@@ -69,7 +74,7 @@ body {
   margin: 0;
   background: var(--bg-page);
   color: var(--fg-body);
-  font-family: var(--font-body);
+  font-family: var(--font-body, var(--font-body-fallback));
   font-size: var(--fs-base);
   line-height: var(--lh-base);
   font-synthesis: none;
