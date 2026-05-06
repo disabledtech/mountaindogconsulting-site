@@ -1,0 +1,22 @@
+---
+/**
+ * 404 page.
+ *
+ * wrangler.jsonc has `not_found_handling: "404-page"` which makes Cloudflare serve
+ * this page (built to /404.html) for any unmatched route.
+ *
+ * Phase 3 may polish this; baseline implementation here so the locked Wrangler
+ * config has a real file to serve.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+<BaseLayout
+  title="Page not found — Mountain Dog Consulting"
+  description="The page you were looking for doesn't exist on this site."
+>
+  <div class="prose">
+    <h1>Page not found</h1>
+    <p>The page you were looking for doesn't exist. It may have moved, or the link may have a typo.</p>
+    <p><a href="/">Return to the home page</a> or get in touch at <a href="mailto:taylor@mountaindogconsulting.com">taylor@mountaindogconsulting.com</a>.</p>
+  </div>
+</BaseLayout>

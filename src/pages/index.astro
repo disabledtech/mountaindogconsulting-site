@@ -1,0 +1,22 @@
+---
+/**
+ * Placeholder homepage.
+ *
+ * Phase 3 (Content Build) replaces this with real content. The placeholder exists
+ * only so the chassis produces a valid build during Phase 2 — before that, the
+ * empty src/pages/ directory caused `astro build` to fail with "no pages found".
+ *
+ * Keep this minimal. Don't add content here that needs to come back out.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const title = 'Mountain Dog Consulting';
+const description = 'Assistive technology consulting and public speaking. Site under rebuild — the new version is on the way.';
+---
+<BaseLayout title={title} description={description}>
+  <div class="prose">
+    <h1>Mountain Dog Consulting</h1>
+    <p>Assistive technology consulting and public speaking by Taylor Danielson, based in British Columbia.</p>
+    <p>This site is being rebuilt. In the meantime, get in touch at <a href="mailto:taylor@mountaindogconsulting.com">taylor@mountaindogconsulting.com</a>.</p>
+  </div>
+</BaseLayout>
