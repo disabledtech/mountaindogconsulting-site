@@ -50,10 +50,18 @@ jobs:
       # selectively re-run install scripts for the specific audit-tool packages we've
       # audited and chose, and prefer the runner's system Chrome where available. The
       # blanket --ignore-scripts above still protects against the 700+ transitive deps.
-      - name: Install browser drivers for audit tools
+      - name: Install chromedriver matching the runner's Chrome version
         run: |
-          # chromedriver install is required by @axe-core/cli
-          npm rebuild chromedriver
+          # @axe-core/cli's bundled chromedriver tracks Chrome stable, but GitHub
+          # runners can lag by one major version. Read the runner's Chrome version
+          # and install the matching chromedriver major so they stay in sync.
+          CHROME_VERSION=$(google-chrome --version | awk '{print $3}')
+          CHROME_MAJOR=$(echo "$CHROME_VERSION" | cut -d. -f1)
+          echo "Runner Chrome: $CHROME_VERSION (major: $CHROME_MAJOR)"
+          # `npm install --no-save` runs install scripts by default, downloading
+          # the matching chromedriver binary even though the parent `npm ci` ran
+          # with --ignore-scripts. `--no-package-lock` keeps the lockfile pristine.
+          npm install --no-save --no-package-lock "chromedriver@$CHROME_MAJOR"
 
       - name: Configure puppeteer to use system Chrome (used by pa11y-ci)
         run: |
