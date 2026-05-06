@@ -38,21 +38,80 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
 
-      - name: Install (no scripts)
+      - name: Install (no scripts, for supply-chain hygiene)
         run: npm ci --ignore-scripts
 
       - name: Audit dependencies (high/critical only)
         run: npm audit --audit-level=high
 
+      # Two locked decisions conflict here: --ignore-scripts (Phase 1b supply-chain lock)
+      # blocks the post-install browser downloads that axe-core/cli (chromedriver) and
+      # pa11y-ci (puppeteer-core) need to drive their audits. Resolution:
+      # selectively re-run install scripts for the specific audit-tool packages we've
+      # audited and chose, and prefer the runner's system Chrome where available. The
+      # blanket --ignore-scripts above still protects against the 700+ transitive deps.
+      - name: Install browser drivers for audit tools
+        run: |
+          # chromedriver install is required by @axe-core/cli
+          npm rebuild chromedriver
+
+      - name: Configure puppeteer to use system Chrome (used by pa11y-ci)
+        run: |
+          if command -v google-chrome >/dev/null 2>&1; then
+            echo "PUPPETEER_EXECUTABLE_PATH=$(command -v google-chrome)" >> "$GITHUB_ENV"
+            echo "Using system Chrome at $(command -v google-chrome)"
+          elif command -v chromium >/dev/null 2>&1; then
+            echo "PUPPETEER_EXECUTABLE_PATH=$(command -v chromium)" >> "$GITHUB_ENV"
+            echo "Using system Chromium at $(command -v chromium)"
+          else
+            echo "::warning::No system Chrome found; downloading puppeteer's bundled browser"
+            npx puppeteer browsers install chrome
+          fi
+
       - name: Build
         run: npm run build
 
-      - name: axe-core (a11y)
-        run: npx --yes @axe-core/cli ./dist --dir --exit
-        continue-on-error: false
+      # axe-core/cli and pa11y-ci both drive a real browser against URLs — neither can scan
+      # static files directly. Spin up a local static server, then audit. Lighthouse CI's
+      # staticDistDir spins up its own server (different port), so it doesn't need this one.
+      # The 404 page isn't in our sitemap (Astro's sitemap plugin excludes it by convention,
+      # which is correct), so it's not audited automatically here — Phase 5 manual audit
+      # covers it before launch.
+      - name: Start preview server
+        run: |
+          npx --yes serve -l 4321 ./dist > /tmp/serve.log 2>&1 &
+          echo $! > /tmp/serve.pid
+          npx --yes wait-on http://localhost:4321 -t 30000
 
-      - name: Pa11y CI (a11y, sitemap-driven)
-        run: npx --yes pa11y-ci --sitemap ./dist/sitemap-index.xml
+      - name: Extract audit URLs from sitemap (rewritten to localhost)
+        id: audit-urls
+        run: |
+          # Pull URLs out of the production sitemap and rewrite the host to localhost.
+          # As we add pages, this scales automatically — no list to maintain in CI.
+          URLS=$(grep -oP '(?<=<loc>)[^<]+' dist/sitemap-0.xml \
+                 | sed 's|https://mountaindogconsulting.com|http://localhost:4321|g')
+          echo "URLs to audit:"
+          echo "$URLS"
+          # Multi-line outputs need the heredoc syntax in GitHub Actions
+          {
+            echo 'urls<<EOF'
+            echo "$URLS"
+            echo 'EOF'
+          } >> "$GITHUB_OUTPUT"
+
+      - name: axe-core (a11y)
+        run: |
+          URLS=$(grep -oP '(?<=<loc>)[^<]+' dist/sitemap-0.xml \
+                 | sed 's|https://mountaindogconsulting.com|http://localhost:4321|g')
+          # shellcheck disable=SC2086
+          npx --yes @axe-core/cli $URLS --exit
+
+      - name: Pa11y CI (a11y)
+        run: |
+          URLS=$(grep -oP '(?<=<loc>)[^<]+' dist/sitemap-0.xml \
+                 | sed 's|https://mountaindogconsulting.com|http://localhost:4321|g')
+          # shellcheck disable=SC2086
+          npx --yes pa11y-ci $URLS
 
       - name: Lighthouse CI — desktop
         run: npx --yes @lhci/cli@latest autorun --config=./lighthouserc.json
@@ -63,6 +122,13 @@ jobs:
         run: npx --yes @lhci/cli@latest autorun --config=./lighthouserc.mobile.json
         env:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+
+      - name: Stop preview server
+        if: always()
+        run: |
+          if [ -f /tmp/serve.pid ]; then
+            kill "$(cat /tmp/serve.pid)" 2>/dev/null || true
+          fi
 
       - name: Upload built site
         uses: actions/upload-artifact@v4
