@@ -354,6 +354,13 @@ picture {
   display: block;
   inline-size: 100%;
   block-size: auto;
+  /* Lock the aspect ratio so the browser reserves the right vertical space
+     before the image bytes arrive. Source is 960×1280 (3:4 portrait); this
+     belt-and-braces declaration cooperates with the width/height attributes
+     emitted by <Picture> and prevents any CLS from font-metric reflows
+     resizing the hero grid before the image paints. */
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
   /* Modest hairline border so the portrait sits cleanly against the
      off-white field without bleeding visually into the background. */
   box-shadow: 0 1px 0 color-mix(in srgb, var(--color-navy) 12%, transparent);
