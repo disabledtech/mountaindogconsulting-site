@@ -1,0 +1,17 @@
+HTML-validate config notes (not parsed by html-validate):
+
+- "no-inline-style" is disabled because Phase 1d locks
+  `build.inlineStylesheets: 'always'` in astro.config.mjs — the entire
+  global stylesheet is intentionally inlined into <head> as a single
+  <style> block for performance (saves a CSS round-trip; stays well
+  under the 14 KB compressed-inline cutoff). The rule treats inline
+  styles as a code smell, but here it's a deliberate architectural
+  choice. Move to external stylesheet only if the inlined CSS exceeds
+  ~14 KB compressed.
+
+- "no-redundant-role" is disabled because role="list" on <ul> with
+  list-style: none is a deliberate Safari/iOS bug workaround. Without
+  it, VoiceOver on Safari drops the list semantics. See:
+  https://adrianroselli.com/2019/01/style-list-style-none.html
+  Removing role="list" would silently degrade screen-reader
+  announcements; we keep it.

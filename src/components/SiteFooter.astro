@@ -1,0 +1,29 @@
+---
+/**
+ * SiteFooter — global footer with attribution, accessibility link, RSS, source.
+ *
+ * Accessibility:
+ * - <footer role="contentinfo"> via implicit role; explicit landmark.
+ * - Year is computed at build time (static generation). Update on next build
+ *   automatically — no JavaScript needed.
+ *
+ * Phase 1c build punch-list item #10: accessibility statement linked here on every page.
+ */
+
+const year = new Date().getFullYear();
+---
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <p class="site-footer__copy">
+      © {year} Mountain Dog Consulting. Based in British Columbia, Canada.
+    </p>
+
+    <nav aria-label="Site information" class="site-footer__nav">
+      <ul role="list" class="site-footer__nav-list">
+        <li><a href="/accessibility/">Accessibility</a></li>
+        <li><a href="/rss.xml">RSS feed</a></li>
+        <li><a href="https://github.com/disabledtech/mountaindogconsulting-site" rel="external noopener">Source on GitHub</a></li>
+      </ul>
+    </nav>
+  </div>
+</footer>

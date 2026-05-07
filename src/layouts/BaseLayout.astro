@@ -20,6 +20,8 @@
 
 import { Font } from 'astro:assets';
 import '../styles/global.css';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
 
 export interface Props {
   /** <title>. Required. */
@@ -32,6 +34,8 @@ export interface Props {
   ogImage?: string;
   /** Page type for Open Graph. Defaults to "website"; use "article" for blog posts. */
   ogType?: 'website' | 'article';
+  /** When true, header anchor links target same-page (#services etc); on subpages they target /#services. */
+  onHomePage?: boolean;
 }
 
 const {
@@ -40,6 +44,7 @@ const {
   canonical,
   ogImage = '/og-image.png',
   ogType = 'website',
+  onHomePage = false,
 } = Astro.props;
 
 const siteOrigin = 'https://mountaindogconsulting.com';
@@ -98,12 +103,12 @@ const ogImageUrl = new URL(ogImage, siteOrigin).toString();
     {/* Skip-to-content — Phase 1c build punch-list #4 */}
     <a href="#main" class="skip-to-content">Skip to content</a>
 
-    <slot name="header" />
+    <SiteHeader onHomePage={onHomePage} />
 
     <main id="main" tabindex="-1">
       <slot />
     </main>
 
-    <slot name="footer" />
+    <SiteFooter />
   </body>
 </html>

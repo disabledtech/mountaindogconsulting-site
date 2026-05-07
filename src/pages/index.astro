@@ -1,22 +1,133 @@
 ---
 /**
- * Placeholder homepage.
+ * Homepage — single-page architecture.
  *
- * Phase 3 (Content Build) replaces this with real content. The placeholder exists
- * only so the chassis produces a valid build during Phase 2 — before that, the
- * empty src/pages/ directory caused `astro build` to fail with "no pages found".
+ * Sections (anchor IDs locked):
+ *   #hero     — h1, intro, headshot, primary CTA
+ *   #services — h2, two service offerings (AT Consulting + Public Speaking)
+ *   #about    — h2, bio
+ *   #contact  — h2, mailto link
  *
- * Keep this minimal. Don't add content here that needs to come back out.
+ * Heading hierarchy: one h1, h2 per section, h3 for service blocks.
+ * Copy revised 2026-05-06 to absorb specifics from existing Squarespace
+ * site (assistive robotics, environmental control, smart-home tech named
+ * directly; lived-experience-as-person-with-disability framing) without
+ * copying the wording.
  */
+import { Picture } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import portraitSrc from '../assets/taylor-portrait.png';
 
-const title = 'Mountain Dog Consulting';
-const description = 'Assistive technology consulting and public speaking. Site under rebuild — the new version is on the way.';
+const title = 'Mountain Dog Consulting — Assistive technology consulting';
+const description = 'Taylor Danielson — assistive technology consulting and public speaking, based in British Columbia. Assistive robotics, environmental control, smart-home tech, and the lived experience to make it work.';
 ---
-<BaseLayout title={title} description={description}>
-  <div class="prose">
-    <h1>Mountain Dog Consulting</h1>
-    <p>Assistive technology consulting and public speaking by Taylor Danielson, based in British Columbia.</p>
-    <p>This site is being rebuilt. In the meantime, get in touch at <a href="mailto:taylor@mountaindogconsulting.com">taylor@mountaindogconsulting.com</a>.</p>
-  </div>
+<BaseLayout title={title} description={description} onHomePage={true}>
+  <section id="hero" class="hero" aria-labelledby="hero-heading">
+    <div class="hero__inner">
+      <div class="hero__copy">
+        <h1 id="hero-heading">Assistive technology that works in real life.</h1>
+        <p class="hero__lede">
+          I'm Taylor Danielson — an assistive technology consultant and public speaker
+          based in British Columbia. I help people with disabilities, the organizations
+          that serve them, and the families around them get more out of assistive
+          robotics, environmental control, and smart-home technology.
+        </p>
+        <p>
+          <a href="#contact" class="button">Get in touch</a>
+        </p>
+      </div>
+      <div class="hero__portrait">
+        <Picture
+          src={portraitSrc}
+          formats={['avif', 'webp']}
+          fallbackFormat="jpg"
+          widths={[400, 600, 800]}
+          sizes="(max-width: 50rem) 80vw, 22rem"
+          quality={{ avif: 60, webp: 80, jpg: 82 }}
+          alt="Taylor Danielson, smiling, in a power wheelchair, wearing a blue plaid blazer at a professional event."
+        />
+      </div>
+    </div>
+  </section>
+
+  <section id="services" aria-labelledby="services-heading" class="section">
+    <div class="section__inner">
+      <h2 id="services-heading">Services</h2>
+
+      <article class="service" aria-labelledby="service-at-heading">
+        <h3 id="service-at-heading">Assistive technology consulting</h3>
+        <p>
+          The hard part of assistive technology is rarely the spec sheet. It's matching
+          the right tools to the right person, in the space the technology has to live
+          in, with a plan the people doing the work can actually follow.
+        </p>
+        <p>
+          I work across assistive robotics, environmental control systems, smart-home
+          integration, communication aids, and the increasingly blurry line between
+          mainstream tech and assistive tech. Engagements typically end with plain-language
+          recommendations, comparison summaries, and rollout plans built for the team that
+          has to use them — not for the procurement binder.
+        </p>
+      </article>
+
+      <article class="service" aria-labelledby="service-speaking-heading">
+        <h3 id="service-speaking-heading">Public speaking engagements</h3>
+        <p>
+          I speak to conferences, professional associations, businesses, and community
+          audiences about assistive technology, accessibility, and the day-to-day
+          experience of building a working life as a person with a disability. Recent
+          topics include voice assistants for people with motor disabilities, accessible
+          smart-home design, and the gap between what's technically possible and what
+          actually gets adopted.
+        </p>
+        <p>
+          Talks are tailored to the audience and to the room. I'll work with you on
+          framing, length, and the accessibility logistics of the event itself —
+          captioning, format alternatives, room layout. Honoraria support continued
+          advocacy work.
+        </p>
+      </article>
+    </div>
+  </section>
+
+  <section id="about" aria-labelledby="about-heading" class="section section--alt">
+    <div class="section__inner">
+      <h2 id="about-heading">About</h2>
+      <p>
+        Mountain Dog Consulting is a one-person practice run by Taylor Danielson out of
+        British Columbia. The work draws on more than two decades of using assistive
+        technology as a person with a physical disability, plus formal experience in
+        nonprofit operations, board governance, and accessibility consulting.
+      </p>
+      <p>
+        The thread through all of it is one question: what would it take for this
+        technology to actually work for the person using it? That question is harder
+        than it looks, which is why most assistive-technology rollouts produce drawers
+        full of unused devices. The answer usually involves more conversation and less
+        catalogue.
+      </p>
+    </div>
+  </section>
+
+  <section id="contact" aria-labelledby="contact-heading" class="section">
+    <div class="section__inner">
+      <h2 id="contact-heading">Contact</h2>
+      <p>
+        The fastest way to reach me is by email. I read everything that comes in and
+        reply within two business days; if your message is time-sensitive, mention that
+        in the subject line.
+      </p>
+      <p class="contact__mailto">
+        <a href="mailto:taylor@mountaindogconsulting.com" class="button">
+          Email taylor@mountaindogconsulting.com
+        </a>
+      </p>
+      <p>
+        For accessibility feedback about this site specifically, please write to
+        <a href="mailto:accessibility@mountaindogconsulting.com">
+          accessibility@mountaindogconsulting.com
+        </a>. See also the <a href="/accessibility/">accessibility statement</a>.
+      </p>
+    </div>
+  </section>
 </BaseLayout>

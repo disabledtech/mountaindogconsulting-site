@@ -1,0 +1,115 @@
+---
+/**
+ * Accessibility statement — public-facing conformance + feedback page.
+ *
+ * Linked from every page footer (Phase 1c build punch-list item #10).
+ * Required sections per Phase 1c lock: conformance target, date last reviewed,
+ * known issues, compatibility statement, feedback mechanism, technical specs,
+ * assessment approach.
+ *
+ * Length target: 400–600 words. Update `lastReviewed` whenever the site is
+ * audited or substantively changed.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const lastReviewed = '2026-05-06';
+const title = 'Accessibility — Mountain Dog Consulting';
+const description = 'How Mountain Dog Consulting designs and tests this site for accessibility, what we conform to, and how to send feedback.';
+---
+<BaseLayout title={title} description={description}>
+  <article class="prose">
+    <h1>Accessibility statement</h1>
+
+    <p>
+      Mountain Dog Consulting is committed to making this website usable by as many people
+      as possible, including people who use assistive technology to read, navigate, or
+      interact with the web. Accessibility is part of the work, not an afterthought.
+    </p>
+
+    <h2>Conformance target</h2>
+    <p>
+      This site is designed to conform to the
+      <a href="https://www.w3.org/TR/WCAG22/" rel="external">
+        Web Content Accessibility Guidelines (WCAG) 2.2
+      </a>
+      at Level AA. Several Level AAA criteria are also met where the design choices made
+      AAA conformance essentially free — body-text contrast, focus appearance, heading
+      structure, and respect for reduced-motion preferences. The conformance target is
+      ratified internationally as ISO/IEC 40500:2025.
+    </p>
+
+    <h2>Last reviewed</h2>
+    <p>
+      This statement and the underlying site were last reviewed on <time datetime={lastReviewed}>{lastReviewed}</time>.
+      A formal review is scheduled with every substantive content or template change.
+    </p>
+
+    <h2>Assessment approach</h2>
+    <p>
+      Conformance is verified using a combination of automated and manual testing on
+      every change before it is published:
+    </p>
+    <ul>
+      <li>axe-core and Pa11y run against every build in continuous integration</li>
+      <li>Lighthouse Accessibility score is held at 100 as a deploy gate</li>
+      <li>Manual keyboard-only walkthroughs cover every interactive element</li>
+      <li>Screen-reader testing pairs VoiceOver with Safari (macOS and iOS) and NVDA with Firefox and Chrome (Windows)</li>
+      <li>Colour contrast for every shipping text-on-background combination is verified against the WCAG 2.x relative-luminance formula and meets at least 4.5:1; body text combinations meet 7:1</li>
+    </ul>
+
+    <h2>Known issues</h2>
+    <p>
+      No outstanding accessibility defects are known at the date above. Issues identified
+      after review are tracked in the public source repository and fixed in the next
+      deploy. If you encounter a barrier, please report it (see <a href="#feedback">Feedback</a>
+      below).
+    </p>
+
+    <h2>Compatibility</h2>
+    <p>
+      The site is built and tested to work with current versions of major web browsers
+      (the most recent two releases of Chrome, Firefox, Safari, and Edge) and the
+      following assistive technologies:
+    </p>
+    <ul>
+      <li>VoiceOver on macOS and iOS</li>
+      <li>NVDA on Windows</li>
+      <li>TalkBack on Android</li>
+      <li>Voice Control on macOS and iOS, Voice Access on Android, and Dragon NaturallySpeaking on Windows</li>
+      <li>Switch Control, switch interfaces, and on-screen keyboards on each platform</li>
+    </ul>
+    <p>
+      The site does not require JavaScript to read or navigate. Cookies are not used.
+      Layouts respect a user's <code>prefers-reduced-motion</code> and zoom settings.
+    </p>
+
+    <h2>Technical specifications</h2>
+    <p>
+      The site is a static HTML site authored in markdown and built with the Astro static
+      site generator. Pages are served from a content delivery network with no client-side
+      scripting on content pages. Typography uses the Atkinson Hyperlegible font, designed
+      by the Braille Institute for low-vision readability, with a system-font fallback.
+    </p>
+
+    <h2 id="feedback">Feedback</h2>
+    <p>
+      If you encounter a barrier on this site or have a suggestion for improvement, please
+      write to
+      <a href="mailto:accessibility@mountaindogconsulting.com">
+        accessibility@mountaindogconsulting.com
+      </a>.
+      Reports are welcome by any format that suits you — plain email, screenshot, screen
+      recording, or a phone call. I aim to acknowledge every report within two business
+      days and to fix or formally respond to issues within thirty days. If a fix will take
+      longer, you'll get an interim plan.
+    </p>
+
+    <h2>Source</h2>
+    <p>
+      The source code for this site is public at
+      <a href="https://github.com/disabledtech/mountaindogconsulting-site" rel="external">
+        github.com/disabledtech/mountaindogconsulting-site
+      </a>. Issues and pull requests are welcome.
+    </p>
+  </article>
+</BaseLayout>

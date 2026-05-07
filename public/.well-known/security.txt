@@ -1,0 +1,8 @@
+# Mountain Dog Consulting — security contact (RFC 9116)
+# If you've found a security issue with this site, please report it to the
+# email below. PGP not currently used.
+
+Contact: mailto:taylor@mountaindogconsulting.com
+Expires: 2027-05-06T00:00:00.000Z
+Preferred-Languages: en
+Canonical: https://mountaindogconsulting.com/.well-known/security.txt

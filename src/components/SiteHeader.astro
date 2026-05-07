@@ -1,0 +1,45 @@
+---
+/**
+ * SiteHeader — global header with logo lockup + primary navigation.
+ *
+ * The Mountain Dog horizontal lockup is inlined as SVG (via ?raw import) so
+ * fill="currentColor" works — that lets the same SVG render in navy on the
+ * off-white header and (in future) off-white on a navy header without
+ * needing two files. The brand application is orange-on-navy in the existing
+ * site, but on a light header the WCAG-locked palette forbids orange-on-
+ * off-white (1.65 ratio) — navy-on-off-white at 12.92 (AAA) is the right call.
+ *
+ * Accessibility:
+ * - The link gets `aria-label="Mountain Dog Consulting — home"` so the
+ *   accessible name is unambiguous; the inlined SVG is hidden from AT.
+ * - <header> + <nav aria-label="Primary"> establish landmarks.
+ *
+ * Single-page architecture: Services / About / Contact are anchor links;
+ * on subpages they fall back to /#services etc.
+ */
+import logoLockupSvg from '../assets/logo/lockup-horizontal.svg?raw';
+
+export interface Props {
+  /** When true, anchor links target same-page (#services); when false, /#services. */
+  onHomePage?: boolean;
+}
+
+const { onHomePage = false } = Astro.props;
+const prefix = onHomePage ? '' : '/';
+---
+<header class="site-header">
+  <div class="site-header__inner">
+    <a href="/" class="site-header__wordmark" aria-label="Mountain Dog Consulting — home">
+      <span class="site-header__logo" aria-hidden="true" set:html={logoLockupSvg} />
+    </a>
+
+    <nav aria-label="Primary" class="site-header__nav">
+      <ul role="list" class="site-header__nav-list">
+        <li><a href={`${prefix}#services`}>Services</a></li>
+        <li><a href={`${prefix}#about`}>About</a></li>
+        <li><a href={`${prefix}#contact`}>Contact</a></li>
+        <li><a href="/blog/">Blog</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
