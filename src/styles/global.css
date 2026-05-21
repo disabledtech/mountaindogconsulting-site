@@ -438,6 +438,156 @@ picture {
 }
 
 /* -------------------------------------------------------------------------- */
+/* Home (blog index) — intro block + post list                                 */
+/* -------------------------------------------------------------------------- */
+
+.home-intro {
+  padding: var(--space-xl) var(--space-m) var(--space-l);
+}
+
+.home-intro__inner {
+  max-width: var(--measure);
+  margin-inline: auto;
+}
+
+.home-intro h1 {
+  font-size: clamp(1.625rem, 1.3rem + 1.6vw, 2.25rem);
+  line-height: 1.2;
+  margin-block-end: var(--space-m);
+  /* The intro h1 is the lede + page title in one; a touch less tight than the
+     /about/ hero h1 because it carries more text per line. */
+  text-wrap: balance;
+}
+
+.home-intro__lede {
+  font-size: 1.125rem;
+  line-height: 1.55;
+}
+
+.home-intro__about-link {
+  /* Render as a substantial "read more" affordance — still a plain underlined
+     link, not a button (it isn't an action, it's a destination). */
+  font-weight: 700;
+}
+
+.post-list {
+  padding: var(--space-l) var(--space-m) var(--space-xl);
+  border-block-start: 1px solid color-mix(in srgb, var(--color-navy) 15%, transparent);
+}
+
+.post-list__inner {
+  max-width: 50rem;
+  margin-inline: auto;
+}
+
+.post-list__inner > h2 {
+  margin-block-end: var(--space-l);
+}
+
+.post-list__items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.post-list__item {
+  margin-block-end: var(--space-l);
+  padding-block-end: var(--space-l);
+  border-block-end: 1px solid color-mix(in srgb, var(--color-navy) 12%, transparent);
+}
+
+.post-list__item:last-child {
+  border-block-end: none;
+}
+
+.post-list__title {
+  font-size: 1.5rem;
+  line-height: 1.25;
+  margin-block-end: var(--space-2xs);
+}
+
+.post-list__title a {
+  /* Increase tap target via padding; keep colour anchor on the heading itself
+     so :focus-visible draws around the whole title. */
+  display: inline-block;
+  padding-block: 2px;
+}
+
+.post-list__meta {
+  color: color-mix(in srgb, var(--color-navy) 70%, var(--color-off-white));
+  font-size: 0.95rem;
+  margin-block: 0 var(--space-2xs);
+}
+
+.post-list__meta-sep {
+  margin-inline: var(--space-2xs);
+}
+
+.post-list__excerpt {
+  margin-block-start: var(--space-2xs);
+  max-width: var(--measure);
+}
+
+.post-list__rss {
+  margin-block-start: var(--space-l);
+  font-size: 0.95rem;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Individual blog post                                                        */
+/* -------------------------------------------------------------------------- */
+
+.post {
+  padding-block: var(--space-xl);
+}
+
+.post__header h1 {
+  font-size: clamp(1.625rem, 1.3rem + 1.6vw, 2.5rem);
+  line-height: 1.15;
+  text-wrap: balance;
+}
+
+.post__meta {
+  color: color-mix(in srgb, var(--color-navy) 70%, var(--color-off-white));
+  font-size: 0.95rem;
+  margin-block: var(--space-2xs) var(--space-l);
+}
+
+.post__meta-sep {
+  margin-inline: var(--space-2xs);
+}
+
+.post__body {
+  /* Inherits .prose constraints from the wrapping article. Post-body
+     headings get slightly tighter top margin so they sit naturally below
+     paragraphs without a giant gap. */
+}
+
+.post__body h2 {
+  margin-block: var(--space-l) var(--space-s);
+}
+
+.post__body h3 {
+  margin-block: var(--space-m) var(--space-2xs);
+}
+
+.post__body ul,
+.post__body ol {
+  padding-inline-start: var(--space-l);
+}
+
+.post__body li + li {
+  margin-block-start: var(--space-2xs);
+}
+
+.post__footer {
+  margin-block-start: var(--space-xl);
+  padding-block-start: var(--space-m);
+  border-block-start: 1px solid color-mix(in srgb, var(--color-navy) 15%, transparent);
+  font-size: 0.95rem;
+}
+
+/* -------------------------------------------------------------------------- */
 /* Site footer (SiteFooter.astro)                                              */
 /* -------------------------------------------------------------------------- */
 

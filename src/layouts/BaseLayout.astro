@@ -34,8 +34,9 @@ export interface Props {
   ogImage?: string;
   /** Page type for Open Graph. Defaults to "website"; use "article" for blog posts. */
   ogType?: 'website' | 'article';
-  /** When true, header anchor links target same-page (#services etc); on subpages they target /#services. */
-  onHomePage?: boolean;
+  /** When true (on /about/), header anchor links target same-page (#services etc);
+   *  elsewhere they target /about/#services so they always resolve. */
+  onAboutPage?: boolean;
 }
 
 const {
@@ -44,7 +45,7 @@ const {
   canonical,
   ogImage = '/og-image.png',
   ogType = 'website',
-  onHomePage = false,
+  onAboutPage = false,
 } = Astro.props;
 
 const siteOrigin = 'https://mountaindogconsulting.com';
@@ -103,7 +104,7 @@ const ogImageUrl = new URL(ogImage, siteOrigin).toString();
     {/* Skip-to-content — Phase 1c build punch-list #4 */}
     <a href="#main" class="skip-to-content">Skip to content</a>
 
-    <SiteHeader onHomePage={onHomePage} />
+    <SiteHeader onAboutPage={onAboutPage} />
 
     <main id="main" tabindex="-1">
       <slot />

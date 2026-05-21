@@ -1,0 +1,81 @@
+---
+/**
+ * Blog post template — renders one post per URL.
+ *
+ * URL shape: /YYYY/slug/  (year derived from pubDate frontmatter).
+ *
+ * The year-prefixed URL pattern is borrowed from Eric Bailey, Adrian Roselli,
+ * and Hidde de Vries — all of whom were locked in as reference sites during
+ * Phase 1c. The date prefix signals "written at a point in time" and
+ * structurally prevents collisions with page routes like /about/ or
+ * /accessibility/ that exist at the path root.
+ *
+ * Drafts (`draft: true` in frontmatter) are filtered out at the
+ * getStaticPaths step so they never render in production builds.
+ */
+import { getCollection, render } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog', ({ data }) => !data.draft);
+  return posts.map((post) => ({
+    params: {
+      year: post.data.pubDate.getFullYear().toString(),
+      slug: post.id,
+    },
+    props: { post },
+  }));
+}
+
+interface Props {
+  post: CollectionEntry<'blog'>;
+}
+
+const { post } = Astro.props;
+const { Content, remarkPluginFrontmatter } = await render(post);
+const readingTime: string | undefined = remarkPluginFrontmatter?.minutesRead;
+
+const dateFormatter = new Intl.DateTimeFormat('en-CA', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+
+const pubDateISO = post.data.pubDate.toISOString();
+const updatedDateISO = post.data.updatedDate?.toISOString();
+---
+<BaseLayout
+  title={`${post.data.title} — Mountain Dog Consulting`}
+  description={post.data.description}
+  ogType="article"
+>
+  <article class="post prose">
+    <header class="post__header">
+      <h1>{post.data.title}</h1>
+      <p class="post__meta">
+        <time datetime={pubDateISO}>{dateFormatter.format(post.data.pubDate)}</time>
+        {readingTime && (
+          <>
+            <span class="post__meta-sep" aria-hidden="true">·</span>
+            <span>{readingTime}</span>
+          </>
+        )}
+        {post.data.updatedDate && (
+          <>
+            <span class="post__meta-sep" aria-hidden="true">·</span>
+            <span>Updated <time datetime={updatedDateISO}>{dateFormatter.format(post.data.updatedDate)}</time></span>
+          </>
+        )}
+      </p>
+    </header>
+
+    <div class="post__body">
+      <Content />
+    </div>
+
+    <footer class="post__footer">
+      <p><a href="/">← Back to all posts</a></p>
+    </footer>
+  </article>
+</BaseLayout>
