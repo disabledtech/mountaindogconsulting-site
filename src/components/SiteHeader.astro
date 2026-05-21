@@ -16,15 +16,15 @@
  *
  * Architecture (post 2026-05-21 pivot):
  * - Home (/) is the blog index; the wordmark links there.
- * - /about/ holds services, bio, contact as anchor sections.
- * - Services and Contact in the nav are deep links into /about/.
- * - When rendered on /about/ itself, anchors target the current page (#services)
- *   rather than re-routing (/about/#services), keeping the in-page jump snappy.
+ * - /about/ holds the what-I-do and contact anchor sections.
+ * - Work and Contact in the nav are deep links into /about/.
+ * - When rendered on /about/ itself, anchors target the current page (#work)
+ *   rather than re-routing (/about/#work), keeping the in-page jump snappy.
  */
 import logoLockupSvg from '../assets/logo/lockup-horizontal.svg?raw';
 
 export interface Props {
-  /** When true, anchor links target same-page (#services); otherwise /about/#services. */
+  /** When true, anchor links target same-page (#work); otherwise /about/#work. */
   onAboutPage?: boolean;
 }
 
@@ -40,7 +40,7 @@ const prefix = onAboutPage ? '' : '/about/';
     <nav aria-label="Primary" class="site-header__nav">
       <ul role="list" class="site-header__nav-list">
         <li><a href="/about/">About</a></li>
-        <li><a href={`${prefix}#services`}>Services</a></li>
+        <li><a href={`${prefix}#work`}>Work</a></li>
         <li><a href={`${prefix}#contact`}>Contact</a></li>
       </ul>
     </nav>
