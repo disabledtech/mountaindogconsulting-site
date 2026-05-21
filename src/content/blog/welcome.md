@@ -7,11 +7,9 @@ tags: ["meta"]
 
 I'm Taylor Danielson, and this is where I write about the work.
 
-I consult on assistive technology and speak publicly about disability and the technology that bridges to it. The [about page](/about/) covers what I do professionally and how to hire me. This site is the rest of it — the projects, the gear, the patterns I keep noticing across both.
+I run an assistive-technology consulting practice out of British Columbia and do some occasional speaking on the side. The [about page](/about/) is the formal version of what I do and how to hire me — this site is the rest of it, the projects and the gear and the patterns I keep noticing across both.
 
 ## What you'll find here
-
-Posts here fall into three rough buckets.
 
 **Projects** are things I've built, configured, or rolled out — voice as a primary or secondary way to control the house, computer, and phone; environmental controls; smart-home gear that fits how I actually live. Enough build detail for someone trying to do the same thing, enough daily-life detail that the post isn't a vendor case study.
 
