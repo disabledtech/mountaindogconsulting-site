@@ -46,6 +46,12 @@
   --fs-base: 1.125rem;       /* ≈ 18 px */
   --lh-base: 1.5;
   --measure: 65ch;           /* Max line length on prose containers */
+  --page-width: 50rem;       /* Outer column for header/footer/sections.
+                                Locked single value so logo, h1, post titles,
+                                and footer text all share the same left edge.
+                                Narrower than --measure-equivalent so prose
+                                stays comfortable; wider than pure prose so
+                                two-col layouts (hero, footer) still fit. */
 
   /* Spacing scale */
   --space-3xs: 0.25rem;
@@ -244,7 +250,7 @@ picture {
 }
 
 .site-header__inner {
-  max-width: 70rem;
+  max-width: var(--page-width);
   margin-inline: auto;
   padding: var(--space-s) var(--space-m);
   display: flex;
@@ -316,7 +322,7 @@ picture {
 }
 
 .hero__inner {
-  max-width: 70rem;
+  max-width: var(--page-width);
   margin-inline: auto;
   display: grid;
   gap: var(--space-l);
@@ -396,7 +402,7 @@ picture {
 }
 
 .section__inner {
-  max-width: 70rem;
+  max-width: var(--page-width);
   margin-inline: auto;
 }
 
@@ -446,7 +452,7 @@ picture {
 }
 
 .home-intro__inner {
-  max-width: var(--measure);
+  max-width: var(--page-width);
   margin-inline: auto;
 }
 
@@ -476,7 +482,7 @@ picture {
 }
 
 .post-list__inner {
-  max-width: 50rem;
+  max-width: var(--page-width);
   margin-inline: auto;
 }
 
@@ -599,7 +605,7 @@ picture {
 }
 
 .site-footer__inner {
-  max-width: 70rem;
+  max-width: var(--page-width);
   margin-inline: auto;
   display: flex;
   flex-wrap: wrap;
