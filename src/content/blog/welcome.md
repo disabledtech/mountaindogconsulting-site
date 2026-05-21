@@ -7,7 +7,7 @@ tags: ["meta"]
 
 I'm Taylor Danielson, and this is where I write about the work.
 
-I run an assistive-technology consulting practice out of British Columbia and do some occasional speaking on the side. The [about page](/about/) is the formal version of what I do and how to hire me — this site is the rest of it, the projects and the gear and the patterns I keep noticing across both.
+I run an assistive-technology consulting practice out of British Columbia. Most of the work is consulting; some of it is speaking. The [about page](/about/) is the formal version of what I do and how to hire me — this site is the rest of it, the projects and the gear and the patterns I keep noticing across both.
 
 ## What you'll find here
 
