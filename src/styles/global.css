@@ -227,6 +227,10 @@ button:hover,
 [role="button"]:hover,
 .button:hover {
   background: var(--bg-button-hover);
+  /* Re-assert the button text colour. Without this, `a:hover` (specificity
+     0,1,1) wins over `.button` (0,1,0) and recolours the text to forest —
+     same as the hover background, making the label disappear. */
+  color: var(--fg-button);
   text-decoration: none;
 }
 
