@@ -74,6 +74,12 @@ html {
   /* Prevent text-size adjustment on orientation change without locking zoom */
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
+  /* Reserve scrollbar space on every page so the centred page column
+     doesn't shift horizontally when navigating between short pages
+     (no scrollbar) and tall pages (scrollbar). Without this, the logo
+     and content edge jump by ~scrollbar-width when the gutter appears
+     or disappears. */
+  scrollbar-gutter: stable;
 }
 
 body {
@@ -632,13 +638,14 @@ picture {
 .site-footer {
   background: var(--color-navy);
   color: var(--color-off-white);
-  padding: var(--space-l) var(--space-m);
+  padding-block: var(--space-l);
   border-block-start: 4px solid var(--color-orange);
 }
 
 .site-footer__inner {
   max-width: var(--page-width);
   margin-inline: auto;
+  padding-inline: var(--space-m);
   display: flex;
   flex-wrap: wrap;
   align-items: center;
