@@ -50,32 +50,34 @@ const updatedDateISO = post.data.updatedDate?.toISOString();
   description={post.data.description}
   ogType="article"
 >
-  <article class="post prose">
-    <header class="post__header">
-      <h1>{post.data.title}</h1>
-      <p class="post__meta">
-        <time datetime={pubDateISO}>{dateFormatter.format(post.data.pubDate)}</time>
-        {readingTime && (
-          <>
-            <span class="post__meta-sep" aria-hidden="true">·</span>
-            <span>{readingTime}</span>
-          </>
-        )}
-        {post.data.updatedDate && (
-          <>
-            <span class="post__meta-sep" aria-hidden="true">·</span>
-            <span>Updated <time datetime={updatedDateISO}>{dateFormatter.format(post.data.updatedDate)}</time></span>
-          </>
-        )}
-      </p>
-    </header>
+  <article class="post">
+    <div class="post__inner">
+      <header class="post__header">
+        <h1>{post.data.title}</h1>
+        <p class="post__meta">
+          <time datetime={pubDateISO}>{dateFormatter.format(post.data.pubDate)}</time>
+          {readingTime && (
+            <>
+              <span class="post__meta-sep" aria-hidden="true">·</span>
+              <span>{readingTime}</span>
+            </>
+          )}
+          {post.data.updatedDate && (
+            <>
+              <span class="post__meta-sep" aria-hidden="true">·</span>
+              <span>Updated <time datetime={updatedDateISO}>{dateFormatter.format(post.data.updatedDate)}</time></span>
+            </>
+          )}
+        </p>
+      </header>
 
-    <div class="post__body">
-      <Content />
+      <div class="post__body prose">
+        <Content />
+      </div>
+
+      <footer class="post__footer">
+        <p><a href="/">← Back to all posts</a></p>
+      </footer>
     </div>
-
-    <footer class="post__footer">
-      <p><a href="/">← Back to all posts</a></p>
-    </footer>
   </article>
 </BaseLayout>

@@ -153,10 +153,12 @@ main {
   display: block;
 }
 
-.prose {
+/* Prose constraint — applied to children, not the .prose container itself.
+   This lets .prose sit inside a page-column wrapper (so its left edge aligns
+   with every other section's content) while individual paragraphs/headings/
+   lists still cap at a comfortable reading line length. */
+.prose > * {
   max-width: var(--measure);
-  margin-inline: auto;
-  padding-inline: var(--space-s);
 }
 
 .prose > * + * {
@@ -322,12 +324,13 @@ picture {
 
 .hero {
   background: var(--bg-page);
-  padding: var(--space-xl) var(--space-m);
+  padding-block: var(--space-xl);
 }
 
 .hero__inner {
   max-width: var(--page-width);
   margin-inline: auto;
+  padding-inline: var(--space-m);
   display: grid;
   gap: var(--space-l);
   grid-template-columns: 1fr;
@@ -381,7 +384,7 @@ picture {
 /* -------------------------------------------------------------------------- */
 
 .section {
-  padding: var(--space-xl) var(--space-m);
+  padding-block: var(--space-xl);
 }
 
 .section--alt {
@@ -408,6 +411,7 @@ picture {
 .section__inner {
   max-width: var(--page-width);
   margin-inline: auto;
+  padding-inline: var(--space-m);
 }
 
 .section h2 {
@@ -452,12 +456,13 @@ picture {
 /* -------------------------------------------------------------------------- */
 
 .home-intro {
-  padding: var(--space-xl) var(--space-m) var(--space-l);
+  padding-block: var(--space-xl) var(--space-l);
 }
 
 .home-intro__inner {
   max-width: var(--page-width);
   margin-inline: auto;
+  padding-inline: var(--space-m);
 }
 
 .home-intro h1 {
@@ -481,13 +486,14 @@ picture {
 }
 
 .post-list {
-  padding: var(--space-l) var(--space-m) var(--space-xl);
+  padding-block: var(--space-l) var(--space-xl);
   border-block-start: 1px solid color-mix(in srgb, var(--color-navy) 15%, transparent);
 }
 
 .post-list__inner {
   max-width: var(--page-width);
   margin-inline: auto;
+  padding-inline: var(--space-m);
 }
 
 .post-list__inner > h2 {
@@ -551,6 +557,12 @@ picture {
   padding-block: var(--space-xl);
 }
 
+.post__inner {
+  max-width: var(--page-width);
+  margin-inline: auto;
+  padding-inline: var(--space-m);
+}
+
 .post__header h1 {
   font-size: clamp(1.625rem, 1.3rem + 1.6vw, 2.5rem);
   line-height: 1.15;
@@ -595,6 +607,22 @@ picture {
   padding-block-start: var(--space-m);
   border-block-start: 1px solid color-mix(in srgb, var(--color-navy) 15%, transparent);
   font-size: 0.95rem;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Standalone prose pages (accessibility statement, 404)                       */
+/* Same page-column wrapper pattern as every other section so the left edge of */
+/* text content lines up across the whole site.                                */
+/* -------------------------------------------------------------------------- */
+
+.page-article {
+  padding-block: var(--space-xl);
+}
+
+.page-article__inner {
+  max-width: var(--page-width);
+  margin-inline: auto;
+  padding-inline: var(--space-m);
 }
 
 /* -------------------------------------------------------------------------- */
