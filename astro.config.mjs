@@ -2,7 +2,7 @@
 import { defineConfig, fontProviders } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import compressor from 'astro-compressor';
-import remarkReadingTime from 'remark-reading-time';
+import { remarkReadingTime } from './src/plugins/remark-reading-time.mjs';
 
 // Astro 6.2+ — see PROJECT — Mountain Dog Website.md → Locked Decisions.
 // Do NOT add client directives, Tailwind, scoped component <style> blocks, or raw <img> elements.
