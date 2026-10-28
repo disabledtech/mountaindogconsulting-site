@@ -111,8 +111,13 @@ jobs:
         run: |
           URLS=$(grep -oP '(?<=<loc>)[^<]+' dist/sitemap-0.xml \
                  | sed 's|https://mountaindogconsulting.com|http://localhost:4321|g')
+          # @axe-core/cli 4.14+ pins its own chromedriver (~152), so the runner-matched
+          # chromedriver installed above lands at top level and axe would ignore it.
+          # Point axe at it explicitly.
+          CHROMEDRIVER_PATH=$(node -p "require('chromedriver').path")
+          echo "Using chromedriver at $CHROMEDRIVER_PATH"
           # shellcheck disable=SC2086
-          npx --yes @axe-core/cli $URLS --exit
+          npx --yes @axe-core/cli $URLS --chromedriver-path "$CHROMEDRIVER_PATH" --exit
 
       - name: Pa11y CI (a11y)
         run: |
